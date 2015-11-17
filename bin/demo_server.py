@@ -1,3 +1,4 @@
+#! /usr/bin/python
 
 import os
 import sys
@@ -8,7 +9,7 @@ import threading
 from   coap   import    coap,                    \
                         coapResource,            \
                         coapDefines as d
-import logging_setup
+import nologging_setup
 
 #---------------------------------------------------------------------------
 

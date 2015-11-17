@@ -1,4 +1,4 @@
-import logging
+import logging, warnings
 class NullHandler(logging.Handler):
     def emit(self, record):
         pass
@@ -50,6 +50,8 @@ class socketUdpReal(socketUdp.socketUdp):
         msg = ''.join([chr(b) for b in msg])
         
         # send over UDP
+        warnings.warn("XXX workaround")
+        return # XXX [CA]
         with self.socketLock:
             self.socket_handler.sendto(msg,(destIp,destPort))
         

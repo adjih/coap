@@ -39,5 +39,7 @@ class coapResource(object):
         temp_pathToMatch = pathToMatch.lstrip('/').rstrip('/')
         if temp_path==temp_pathToMatch:
             return True
+        elif temp_pathToMatch.startswith(temp_path): # XXX [CA]
+            return True
         else:
             return False

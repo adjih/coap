@@ -23,11 +23,13 @@ from socketUdpReal       import socketUdpReal
 
 class coap(object):
 
-    def __init__(self,ipAddress='',udpPort=d.DEFAULT_UDP_PORT,testing=False):
+    def __init__(self,ipAddress='',udpPort=d.DEFAULT_UDP_PORT,testing=False,
+                 callback=None):
 
         # store params
         self.ipAddress            = ipAddress
         self.udpPort              = udpPort
+        self.callback             = callback
 
         # local variables
         self.name                 = 'coap@[{0}]:{1}'.format(self.ipAddress,self.udpPort)
@@ -213,6 +215,10 @@ class coap(object):
             log.warning('malformed message {0}: {1}'.format(u.formatBuf(rawbytes),str(err)))
             return
 
+        if self.callback != None:
+            self.callback(srcIp, message)
+            return
+
         # dispatch message
         try:
             if   message['code'] in d.METHOD_ALL:
@@ -228,6 +234,8 @@ class coap(object):
                 resource = None
                 with self.resourceLock:
                     for r in self.resources:
+                        print "*"*50
+                        print (r, path)
                         if r.matchesPath(path):
                             resource = r
                             break
