@@ -4,6 +4,7 @@ import os
 import sys
 here = sys.path[0]
 sys.path.insert(0, os.path.join(here,'..'))
+sys.path.insert(0, os.path.join(here,'../../tools'))
 
 import threading
 from   coap   import    coap,                    \
@@ -19,41 +20,27 @@ class MessageManager:
     
     def receive(self, srcAddr, msg):
         #print srcAddr, msg
-        print srcAddr, msg["options"]
+        print srcAddr, msg["options"], "".join((chr(x) for x in msg["payload"]))
 
 messageManager = MessageManager()
 
 #---------------------------------------------------------------------------
 
-# open
-c = coap.coap(ipAddress='::', callback=messageManager.receive)
+import ServerGui
 
+serverGui = ServerGui.ServerGui()
+
+# open
+c = coap.coap(ipAddress='::', callback=serverGui.receiveCoap)
 
 for t in threading.enumerate():
     print t.name
 
-
-#---------------------------------------------------------------------------
-
-import tornado.ioloop
-import tornado.web
-
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("Hello, world")
-
-def make_app():
-    return tornado.web.Application([
-        (r"/", MainHandler),
-    ])
-
-app = make_app()
-app.listen(8888)
-tornado.ioloop.IOLoop.current().start()
-
 #---------------------------------------------------------------------------
 
 # let the server run
+serverGui.run()
+
 raw_input('\n\nServer running. Press Enter to close.\n\n')
 
 # close
