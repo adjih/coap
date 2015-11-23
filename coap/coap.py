@@ -17,6 +17,7 @@ import coapException    as e
 import coapResource     as r
 import coapDefines      as d
 import coapUri
+import coapOption
 import coapTransmitter
 from socketUdpDispatcher import socketUdpDispatcher
 from socketUdpReal       import socketUdpReal
@@ -216,8 +217,9 @@ class coap(object):
             return
 
         if self.callback != None:
-            self.callback(srcIp, message)
-            return
+            fullPath = [x.path for x in message["options"] if isinstance(x, coapOption.UriPath) ]
+            self.callback(srcIp, message, fullPath)
+            return # XXX: should continue
 
         # dispatch message
         try:
